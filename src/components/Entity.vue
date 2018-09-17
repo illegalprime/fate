@@ -3,30 +3,37 @@
   <div class="entity">
     <div class="entity__type">{{entity.type}}</div>
     <div class="entity__name">{{entity.name}}</div>
-    <div class="entity__aspects" ref="aspects">
-      <h3>Aspects</h3>
-      <div v-for="aspect in entity.aspects">
-        {{aspect.type}}: {{aspect.name}}
-      </div>
-    </div>
+    <Aspects :entity="entity"></Aspects>
+    <transition v-on:enter="enter" v-on:beforeEnter="beforeEnter" v-on:leave="leave">
+      <Skills :entity="entity" v-if="shouldShowSkills"></Skills>
+    </transition>
   </div>
 </transition>
 </template>
 
 <script>
 import anime from 'animejs'
-import smoothReflow from 'vue-smooth-reflow';
+import Aspects from './Entity/Aspects';
+import Skills from './Entity/Skills';
+
 
 export default {
-  mixins: [smoothReflow],
-
-  props: ['entity'],
-
-  mounted(){
-    this.$smoothReflow({
-      el: this.$refs.aspects
-    });
+  components: {
+    Aspects,
+    Skills,
   },
+
+  computed: {
+    shouldShowSkills() {
+      if (this.entity.type == "NPC") {
+        return false;
+      }
+
+      return true;
+    }
+  },
+
+  props: ['entity', 'mode'],
 
   methods: {
     beforeEnter(el) {
@@ -42,11 +49,22 @@ export default {
         targets: [el, el.querySelectorAll('div')],
         opacity: [0,1,0,1],
         duration: 200,
-        delay: (el, i, l) => i * 100,
+        delay: (el, i, l) => i * 20,
       });
 
       keyframes.finished.then(done);
     },
+
+    leave(el, done) {
+      let keyframes = anime({
+        targets: [el, el.querySelectorAll('div')],
+        opacity: [1,0,1,0],
+        duration: 200,
+        delay: (el, i, l) => i * 20,
+      });
+
+      keyframes.finished.then(done);
+    }
   }
 }
 </script>
@@ -54,11 +72,38 @@ export default {
 <style lang="scss">
 @import '../styles/variables';
 
+.entity__h3 {
+  position: relative;
+  color: $color-dark-blue;
+  font-size: 20px;
+  margin: 15px 0 0 15px;
+  background-color: $color-darker-blue;
+  display: flex;
+
+  &:after{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background-color: $color-dark-blue;
+    top: calc(50% - 2.5px);
+    left: -15px;
+    z-index: 0;
+  }
+}
+
+.entity__h3__inner {
+  position: relative;
+  z-index: 2;
+  background-color: $color-darker-blue;
+  padding: 0 15px 0 15px;
+}
+
 .entity {
   position: relative;
   font-size: 20px;
   border: 5px solid $color-dark-blue;
-  padding: 45px 15px 15px 15px;
+  padding: 75px 15px 15px 15px;
   width: 500px;
   overflow: hidden;
   background-color: $color-darker-blue;
@@ -104,12 +149,9 @@ export default {
   max-height: 100vh;
 }
 
-.entity-grid__row {
-
-}
-
 .entities-container {
   display: flex;
   flex-wrap: wrap;
 }
+
 </style>

@@ -1,11 +1,11 @@
 <template>
-<transition-group id="screen" name="list-complete">
-  <Entity v-for="entity in entities" v-bind:key="entity._id" :entity="entity" class="list-complete-item"></Entity>
-</transition-group>
+<div id="screen" ref="screen">
+  <Entity v-for="entity in entities" :entity="entity" :mode="'screen'"></Entity>
+</div>
 </template>
 
 <script>
-import Entity from './Entity'
+import Entity from './Entity';
 
 export default {
   components: {
@@ -19,6 +19,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../styles/variables';
+
 #screen {
   position: fixed;
   top: 0;
@@ -29,19 +31,9 @@ export default {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-}
-
-.list-complete-item {
-  transition: all 1s;
-  margin-right: 10px;
-}
-.list-complete-leave-to
-/* .list-complete-leave-active below version 2.1.8 */ {
-  opacity: 0;
-  transform: translateY(30px);
-}
-.list-complete-leave-active {
-  position: absolute;
+  justify-content: center;
+  align-items: center;
+  padding: $padding;
 }
 
 </style>
