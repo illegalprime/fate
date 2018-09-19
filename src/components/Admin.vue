@@ -14,6 +14,7 @@
       <input v-model="entity.type" @change="updateEntity(entity)">
       <input v-model="entity.name" @change="updateEntity(entity)">
       <button @click="deleteEntity(entity)">Remove Entity</button>
+      <button @click="sendCommand('screen', 'focusEntity', entity._id)">Focus Entity</button>
       <br>
       aspects
       <div v-for="(aspect, index) in entity.aspects">
@@ -53,6 +54,10 @@ export default {
   },
 
   methods: {
+    sendCommand(target, methodName, ...args) {
+      this.$pouch.post('commands', {target, methodName, args});
+    },
+
     createEntity() {
       let entity = {
         name: this.entityName,

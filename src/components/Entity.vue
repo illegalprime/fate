@@ -3,7 +3,7 @@
   <div class="entity">
     <div class="entity__type">{{entity.type}}</div>
     <div class="entity__name">{{entity.name}}</div>
-    <Aspects :entity="entity"></Aspects>
+    <Aspects :entity="entity" :noAnimation="noAnimation"></Aspects>
     <transition v-on:enter="enter" v-on:beforeEnter="beforeEnter" v-on:leave="leave">
       <Skills :entity="entity" v-if="shouldShowSkills"></Skills>
     </transition>
@@ -33,10 +33,12 @@ export default {
     }
   },
 
-  props: ['entity', 'mode'],
+  props: ['entity', 'mode', 'noAnimation'],
 
   methods: {
     beforeEnter(el) {
+      if (this.noAnimation) return;
+
       let keyframes = anime({
         targets: [el, el.querySelectorAll('div')],
         opacity: 0,
@@ -45,6 +47,8 @@ export default {
     },
 
     enter(el, done) {
+      if (this.noAnimation) return done();
+
       let keyframes = anime({
         targets: [el, el.querySelectorAll('div')],
         opacity: [0,1,0,1],
@@ -56,6 +60,8 @@ export default {
     },
 
     leave(el, done) {
+      if (this.noAnimation) return done();
+
       let keyframes = anime({
         targets: [el, el.querySelectorAll('div')],
         opacity: [1,0,1,0],

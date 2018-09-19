@@ -1,19 +1,26 @@
 <template>
 <div id="screen" ref="screen">
-  <Entity v-for="entity in entities" :entity="entity" :mode="'screen'"></Entity>
+  <Tweener v-for="entity in entities" :component="Entity" :componentProps="{entity}" :mode="'screen'"></Tweener>
 </div>
 </template>
 
 <script>
 import Entity from './Entity';
+import Tweener from './Tweener';
 
 export default {
   components: {
-    Entity,
+    Tweener
   },
 
   pouch: {
     entities: {}
+  },
+
+  data() {
+    return {
+      Entity,
+    };
   },
 }
 </script>

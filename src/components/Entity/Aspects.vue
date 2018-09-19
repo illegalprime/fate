@@ -20,13 +20,15 @@ import smoothReflow from 'vue-smooth-reflow';
 
 export default {
   mixins: [smoothReflow],
-  props: ['entity'],
+  props: ['entity', 'noAnimation'],
 
   pouch: {
     entities: {}
   },
 
   mounted() {
+    if (this.noAnimation) return;
+
     this.$smoothReflow({
       el: this.$refs.aspects
     });
