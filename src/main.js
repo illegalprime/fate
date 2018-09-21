@@ -7,13 +7,17 @@ import VuePouch from 'vue-pouch'
 import PouchDB from 'pouchdb-browser'
 import PouchDBFind from 'pouchdb-find'
 import PouchDBLiveFind from 'pouchdb-live-find'
+import VueTextareaAutosize from 'vue-textarea-autosize'
+
 
 PouchDB.plugin(PouchDBFind);
 PouchDB.plugin(PouchDBLiveFind);
 Vue.use(VuePouch, {
   pouch: PouchDB,
-  defaultDB: 'fate',
+  defaultDB: 'fatedb',
 });
+
+Vue.use(VueTextareaAutosize);
 
 Vue.config.productionTip = false
 

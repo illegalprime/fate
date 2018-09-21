@@ -9,8 +9,7 @@ export default {
   name: 'App',
 
   created: function() {
-    this.$pouch.sync('entities', 'http://10.0.0.167:5984/fate-entities');
-    this.$pouch.sync('commands', 'http://10.0.0.167:5984/fate-commands');
+    this.$pouch.sync('fatedb', 'http://10.0.0.167:5984/fatedb');
   }
 }
 </script>
@@ -23,6 +22,27 @@ body {
   background-color: $color-bg;
   color: $color-text;
   font-family: Space Mono;
+}
+
+input {
+  background: none !important;
+  border: none;
+  font-family: Space Mono;
+  color: $color-text;
+  padding: 0;
+  margin: 0;
+}
+
+textarea {
+  width: 100%;
+  background: none !important;
+  border: none;
+  font-family: Space Mono;
+  color: $color-text;
+  padding: 0;
+  margin: 0;
+  font-size: 20px;
+  height: 0px;
 }
 
 </style>

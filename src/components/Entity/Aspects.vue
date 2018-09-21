@@ -2,8 +2,10 @@
 <div class="entity__aspects" ref="aspects">
   <div v-for="aspect in entity.aspects" class="aspect">
     <div class="aspect__type">{{aspect.type}}</div>
-    <div class="aspect__name">{{aspect.name}}</div>
-    <div class="aspect__invocations" v-if="aspect.invocationsCount > 0">
+    <div class="aspect__name">
+      <textarea-autosize type="text" v-model="aspect.name" :min-height="0" rows="1" v-on:change.native="store.update(entity)"></textarea-autosize>
+    </div>
+    <div class="aspect__invocations no-transform" v-if="aspect.invocationsCount > 0">
       <div v-for="n in parseInt(aspect.invocationsCount)"
            class="invocation-checkbox"
            :class="n <= aspect.invocationsUsedCount ? 'invocation-checkbox--checked' : ''"
@@ -20,7 +22,7 @@ import smoothReflow from 'vue-smooth-reflow';
 
 export default {
   mixins: [smoothReflow],
-  props: ['entity', 'noAnimation'],
+  props: ['entity', 'noAnimation', 'store'],
 
   pouch: {
     entities: {}
@@ -37,7 +39,7 @@ export default {
   methods: {
     checkInvocation(aspect, n) {
       n <= aspect.invocationsUsedCount ? aspect.invocationsUsedCount-- : aspect.invocationsUsedCount++;
-      this.$pouch.put('entities', this.entity);
+      this.$pouch.put('fatedb', this.entity);
     }
   }
 }
@@ -105,6 +107,7 @@ export default {
   flex-wrap: wrap;
   flex-grow: 1;
   justify-content: center;
+  align-content: flex-start;
 
   margin-right: 15px;
   padding: 5px 10px 5px 5px;

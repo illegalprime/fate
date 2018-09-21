@@ -1,21 +1,21 @@
 <template>
-<transition v-on:enter="enter" v-on:beforeEnter="beforeEnter">
-  <div class="entity">
-    <div class="entity__type">{{entity.type}}</div>
-    <div class="entity__name">{{entity.name}}</div>
-    <Aspects :entity="entity" :noAnimation="noAnimation"></Aspects>
-    <transition v-on:enter="enter" v-on:beforeEnter="beforeEnter" v-on:leave="leave">
-      <Skills :entity="entity" v-if="shouldShowSkills"></Skills>
-    </transition>
+<div class="entity" ref="entity" :class="{ expanded }">
+  <div class="entity__type">{{entity.type}}</div>
+  <input type="text" class="entity__name" v-model="entity.name" @change="store.update(entity)">
+  <div class="col">
+    <Aspects :entity="entity" :noAnimation="noAnimation" :store="store"></Aspects>
+    <Skills :entity="entity" v-if="shouldShowSkills"></Skills>
   </div>
-</transition>
+  <div class="col">
+
+  </div>
+</div>
 </template>
 
 <script>
 import anime from 'animejs'
 import Aspects from './Entity/Aspects';
 import Skills from './Entity/Skills';
-
 
 export default {
   components: {
@@ -25,53 +25,11 @@ export default {
 
   computed: {
     shouldShowSkills() {
-      if (this.entity.type == "NPC") {
-        return false;
-      }
-
-      return true;
+      return this.expanded
     }
   },
 
-  props: ['entity', 'mode', 'noAnimation'],
-
-  methods: {
-    beforeEnter(el) {
-      if (this.noAnimation) return;
-
-      let keyframes = anime({
-        targets: [el, el.querySelectorAll('div')],
-        opacity: 0,
-        duration: 0,
-      });
-    },
-
-    enter(el, done) {
-      if (this.noAnimation) return done();
-
-      let keyframes = anime({
-        targets: [el, el.querySelectorAll('div')],
-        opacity: [0,1,0,1],
-        duration: 200,
-        delay: (el, i, l) => i * 20,
-      });
-
-      keyframes.finished.then(done);
-    },
-
-    leave(el, done) {
-      if (this.noAnimation) return done();
-
-      let keyframes = anime({
-        targets: [el, el.querySelectorAll('div')],
-        opacity: [1,0,1,0],
-        duration: 200,
-        delay: (el, i, l) => i * 20,
-      });
-
-      keyframes.finished.then(done);
-    }
-  }
+  props: ['entity', 'mode', 'noAnimation', 'expanded', 'store'],
 }
 </script>
 
@@ -114,6 +72,14 @@ export default {
   overflow: hidden;
   background-color: $color-darker-blue;
   margin: 0 $padding $padding 0;
+
+  &.expanded {
+    width: 1000px;
+
+    .col {
+      width: 50%;
+    }
+  }
 }
 
 .entity__type {
@@ -146,6 +112,8 @@ export default {
   margin-right: 15px;
   padding: 5px;
   font-size: 32px;
+  text-align: right;
+  width: calc(100% - 150px);
 
   border-bottom: 5px solid $color-dark-blue;
 }

@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "add": "^2.0.6",
     "animejs": "^2.2.0",
     "node-sass": "^4.9.3",
     "pouchdb-browser": "^7.0.0",
@@ -20,7 +21,9 @@
     "vue": "^2.5.2",
     "vue-pouch": "^0.0.23",
     "vue-router": "^3.0.1",
-    "vue-smooth-reflow": "^0.1.6"
+    "vue-smooth-reflow": "^0.1.6",
+    "vue-textarea-autosize": "^1.0.4",
+    "yarn": "^1.9.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

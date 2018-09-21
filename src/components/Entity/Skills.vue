@@ -2,10 +2,10 @@
 <div class="entity__skills">
   <h3 class="entity__h3"><div class="entity__h3__inner">Skills</div></h3>
   <div v-for="(skillGroup, skillGroupNum) in entity.skills" v-if="skillGroup.length > 0" class="skill-group">
+    <div class="skill-group__rank">
+      {{ranks[skillGroupNum + 1]}}
+    </div>
     <div class="skill-group__name">
-      <div class="skill-group__name__rank">
-        {{ranks[skillGroupNum + 1]}}
-      </div>
       <div class="skill-group__name__value">
         +{{skillGroupNum + 1}}
       </div>
@@ -42,6 +42,17 @@ export default {
   &:first-of-type {
     margin-top: 25px;
   }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    top: -5px;
+    left: 0;
+    background: linear-gradient(-90deg, $color-darker-blue, $color-dark-blue, $color-darker-blue);
+    z-index: 1;
+  }
 }
 
 .skill {
@@ -59,27 +70,17 @@ export default {
 .skill-group__name {
   display: inline-block;
   align-items: center;
-
-  &:after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 1px;
-    top: -4px;
-    background: linear-gradient(-90deg, $color-darker-blue, $color-dark-blue, $color-darker-blue);
-    z-index: 1;
-  }
 }
 
 .skill-group__name__value {
   color: $color-blue;
 }
 
-.skill-group__name__rank {
+.skill-group__rank {
   position: absolute;
   // display: none;
   font-size: 12px;
-  top: -14px;
+  top: -13px;
   left: 0;
   color: $color-dark-blue;
   font-weight: bolder;

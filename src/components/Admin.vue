@@ -1,5 +1,6 @@
 <template>
 <div id="admin">
+  <button @click="command('screen', 'clearFocus')">Clear Focus</button>
   <div class="entities">
     create entity
     <form @submit.prevent="createEntity">
@@ -11,17 +12,17 @@
     <div v-for="entity in entities">
       entity
       <br>
-      <input v-model="entity.type" @change="updateEntity(entity)">
-      <input v-model="entity.name" @change="updateEntity(entity)">
-      <button @click="deleteEntity(entity)">Remove Entity</button>
-      <button @click="sendCommand('screen', 'focusEntity', entity._id)">Focus Entity</button>
+      <input v-model="entity.type" @change="store.update(entity)">
+      <input v-model="entity.name" @change="store.update(entity)">
+      <button @click="store.destroy(entity)">Remove Entity</button>
+      <button @click="command('screen', 'focusEntity', entity._id)">Focus Entity</button>
       <br>
       aspects
       <div v-for="(aspect, index) in entity.aspects">
-        <input v-model="aspect.type" placeholder="Type" @change="updateEntity(entity)">
-        <input v-model="aspect.name" placeholder="Name" @change="updateEntity(entity)">
-        <input v-model="aspect.invocationsCount" placeholder="Invocations" type="number" @change="updateEntity(entity)">
-        <input v-model="aspect.invocationsUsedCount" placeholder="Invocations Used" type="number" @change="updateEntity(entity)">
+        <input v-model="aspect.type" placeholder="Type" @change="store.update(entity)">
+        <input v-model="aspect.name" placeholder="Name" @change="store.update(entity)">
+        <input v-model="aspect.invocationsCount" placeholder="Invocations" type="number" @change="store.update(entity)">
+        <input v-model="aspect.invocationsUsedCount" placeholder="Invocations Used" type="number" @change="store.update(entity)">
         <button @click="removeAspect(entity, index)">Remove Aspect</button>
       </div>
       create aspect
@@ -38,9 +39,17 @@
 </template>
 
 <script>
-export default {
+import Store from '../Store';
+let store = new Store();
+
+const Admin = {
+  created() {
+    store.setPouch(this.$pouch);
+  },
+
   data() {
     return {
+      store,
       entityName: '',
       entityType: '',
       aspectName: '',
@@ -50,60 +59,56 @@ export default {
   },
 
   pouch: {
-    entities: {}
+    entities: store.pouch('entity')
   },
 
   methods: {
-    sendCommand(target, methodName, ...args) {
-      this.$pouch.post('commands', {target, methodName, args});
-    },
-
     createEntity() {
-      let entity = {
+      let entity = store.create('entity', {
         name: this.entityName,
         type: this.entityType,
-        aspects: [],
-        skills: [
-          [null, null, null, null],
-          [null, null, null],
-          [null, null],
-          [null],
-          [],
-        ],
-        extras: [],
-        stunts: [],
+      });
 
-      };
-
-      entity.skills = [
+      entity.set('skills', [
         ['Athletics', 'Burglary', 'Contacts', 'Crafts'],
         ['Deceive', 'Drive', 'Empathy'],
         ['Fight', 'Investigate'],
         ['Notice'],
         []
-      ]
+      ])
 
-      this.$pouch.post('entities', entity);
+     entity.save();
     },
 
-    updateEntity(entity) {
-      this.$pouch.put('entities', entity);
-    },
-
-    deleteEntity(entity) {
-      this.$pouch.remove('entities', entity);
+    command(target, methodName, ...args) {
+      store.create('command', {target, methodName, args}).save();
     },
 
     addAspect(entity, aspect) {
       entity.aspects = entity.aspects ? entity.aspects : [];
       entity.aspects.push(aspect);
-      this.$pouch.post('entities', entity);
+      store.save(entity);
     },
 
     removeAspect(entity, index) {
       entity.aspects.splice(index, 1);
-      this.$pouch.post('entities', entity);
+      store.save(entity);
     },
   }
 }
+
+export default Admin
 </script>
+
+<style lang="scss">
+@import '../styles/variables';
+
+#admin {
+  input {
+    background-color: $color-dark-blue !important;
+    padding: 5px;
+    text-align: left;
+  }
+}
+
+</style>
