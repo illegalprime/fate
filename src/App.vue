@@ -10,6 +10,7 @@ export default {
 
   created: function() {
     this.$pouch.sync('fatedb', 'http://10.0.0.167:5984/fatedb');
+    // this.$pouch.sync('fatedb', 'localhost:5984/fatedb');
   }
 }
 </script>

@@ -3,7 +3,7 @@
   <EntityTransitionGroup>
     <Tweener v-for="entity in entities"
              :component="Entity"
-             :componentProps="{entity}"
+             :componentProps="{entity, mode}"
              :key="entity._id"
              :mode="'screen'"></Tweener>
   </EntityTransitionGroup>
@@ -12,7 +12,7 @@
     <EntityTransitionGroup v-if="showFocusedEntities" id="focused">
       <Tweener v-for="entity in focusedEntities"
                :component="Entity"
-               :componentProps="{entity, expanded: true}"
+               :componentProps="{entity, expanded: true, mode}"
                :key="entity._id"
                :mode="'screen'">
       </Tweener>
@@ -51,6 +51,7 @@ let Screen = {
       console,
       focusedEntityIds: [],
       showFocusedEntities: false,
+      mode: 'screen',
     };
   },
 

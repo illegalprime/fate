@@ -6,8 +6,11 @@
     <Aspects :entity="entity" :noAnimation="noAnimation" :store="store"></Aspects>
     <Skills :entity="entity" v-if="shouldShowSkills"></Skills>
   </div>
-  <div class="col">
-
+  <div class="col" v-if="shouldShowSkills">
+    <Description :entity="entity" :noAnimation="noAnimation" :store="store" :mode="mode"></Description>
+    <StressTracks :entity="entity" :store="store" :noAnimation="noAnimation"></StressTracks>
+    <Consequences :entity="entity" :store="store" :mode="mode" :noAnimation="noAnimation"></Consequences>
+    <Extras :entity="entity" :noAnimation="noAnimation" :store="store" :mode="mode"></Extras>
   </div>
 </div>
 </template>
@@ -16,16 +19,24 @@
 import anime from 'animejs'
 import Aspects from './Entity/Aspects';
 import Skills from './Entity/Skills';
+import StressTracks from './Entity/StressTracks';
+import Consequences from './Entity/Consequences';
+import Description from './Entity/Description';
+import Extras from './Entity/Extras';
 
 export default {
   components: {
     Aspects,
     Skills,
+    StressTracks,
+    Consequences,
+    Description,
+    Extras
   },
 
   computed: {
     shouldShowSkills() {
-      return this.expanded
+      return this.expanded || this.mode == 'edit'
     }
   },
 
@@ -75,9 +86,11 @@ export default {
 
   &.expanded {
     width: 1000px;
+    display: flex;
+    justify-content: space-between;
 
     .col {
-      width: 50%;
+      width: calc(50% - 15px);
     }
   }
 }
@@ -128,4 +141,8 @@ export default {
   flex-wrap: wrap;
 }
 
+.col {
+  display: flex;
+  flex-direction: column;
+}
 </style>

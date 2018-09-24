@@ -1,17 +1,19 @@
 <template>
 <div class="entity__skills">
   <h3 class="entity__h3"><div class="entity__h3__inner">Skills</div></h3>
-  <div v-for="(skillGroup, skillGroupNum) in entity.skills" v-if="skillGroup.length > 0" class="skill-group">
-    <div class="skill-group__rank">
-      {{ranks[skillGroupNum + 1]}}
-    </div>
-    <div class="skill-group__name">
-      <div class="skill-group__name__value">
-        +{{skillGroupNum + 1}}
+  <div class="skill-groups">
+    <div v-for="(skillGroup, skillGroupNum) in entity.skills" v-if="skillGroup.length > 0" class="skill-group">
+      <div class="skill-group__rank">
+        {{ranks[skillGroupNum + 1]}}
       </div>
-    </div>
-    <div v-for="skill in skillGroup" class="skill" :class="skill ? '' : 'skill--blank'">
-      {{skill || "Select"}}
+      <div class="skill-group__name">
+        <div class="skill-group__name__value">
+          +{{skillGroupNum + 1}}
+        </div>
+      </div>
+      <div v-for="skill in skillGroup" class="skill" :class="skill ? '' : 'skill--blank'">
+        {{skill || "Select"}}
+      </div>
     </div>
   </div>
 </div>
@@ -34,12 +36,18 @@ export default {
 
 <style lang="scss">
 @import '../../styles/variables';
+.skill-groups {
+  display: flex;
+  flex-direction: column;
+  flex-direction: column-reverse;
+}
+
 .skill-group {
   position: relative;
   width: 100%;
   margin-bottom: 25px;
 
-  &:first-of-type {
+  &:last-of-type {
     margin-top: 25px;
   }
 

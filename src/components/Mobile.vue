@@ -1,6 +1,6 @@
 <template>
 <div id="screen" ref="screen">
-  <Entity v-for="entity in entities" :entity="entity" :key="entity._id" :store="store"></Entity>
+  <Entity v-for="entity in entities" :entity="entity" :key="entity._id" :store="store" :mode="'edit'"></Entity>
 </div>
 </template>
 
