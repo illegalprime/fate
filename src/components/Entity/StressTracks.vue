@@ -44,57 +44,8 @@ export default {
   display: flex;
 }
 
-@keyframes stress-box {
-  0% {
-    transform: scaleX(1);
-    background-color: $color-darker-blue;
-    color: white;
-  }
-
-  50% {
-    transform: scaleX(0);
-    background-color: $color-darker-blue;
-    color: white;
-  }
-  51% {
-    transform: scaleX(0);
-    background-color: $color-blue;
-    color: $color-darker-blue;
-  }
-
-  100% {
-    transform: scaleX(1);
-    background-color: $color-blue;
-    color: $color-darker-blue;
-  }
-}
-
-@keyframes stress-box-reverse {
-  0% {
-    transform: scaleX(1);
-    background-color: $color-blue;
-    color: $color-darker-blue;
-  }
-
-  50% {
-    transform: scaleX(0);
-    background-color: $color-blue;
-    color: $color-darker-blue;
-  }
-  51% {
-    transform: scaleX(0);
-    background-color: $color-darker-blue;
-    color: white;
-  }
-
-  100% {
-    transform: scaleX(1);
-    background-color: $color-darker-blue;
-    color: white;
-  }
-}
-
 .stress-track__box {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -104,15 +55,31 @@ export default {
   border: 2px solid $color-blue;
   cursor: pointer;
   background-color: $color-darker-blue;
+  overflow: hidden;
+  cursor: pointer;
 
-  animation: stress-box-reverse 1s;
+  transition: color .2s ease,
+              border-color .2s ease;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 2px;
+    background-color: $color-dark-blue;
+    transform: rotate(45deg) scaleX(0);
+    transition: transform .2s ease;
+  }
 }
 
 .stress-track__box--checked {
-  background-color: $color-blue;
+  border-color: $color-dark-blue;
   color: $color-dark-blue;
 
-  animation: stress-box 1s;
+  &:after {
+    transform: rotate(45deg) scaleX(1);
+  }
 }
 
 </style>
