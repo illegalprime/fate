@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Mobile from '@/components/Mobile'
 import Admin from '@/components/Admin'
 import Screen from '@/components/Screen'
+import Dice from '@/components/Dice'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/screen',
       name: 'Screen',
       component: Screen
+    },
+    {
+      path: '/dice',
+      name: 'Dice',
+      component: Dice
     },
   ]
 })
