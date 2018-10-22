@@ -24,10 +24,5 @@ export default new Router({
       name: 'Screen',
       component: Screen
     },
-    {
-      path: '/dice',
-      name: 'Dice',
-      component: Dice
-    },
   ]
 })

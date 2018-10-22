@@ -13,6 +13,7 @@
     "add": "^2.0.6",
     "animejs": "^2.2.0",
     "cannon": "^0.6.2",
+    "howler": "^2.0.15",
     "node-sass": "^4.9.3",
     "pouchdb-browser": "^7.0.0",
     "pouchdb-find": "^7.0.0",

@@ -54,13 +54,14 @@ export default {
     },
 
     animateElement() {
-      let duration = this.positionedOnce ? 1000 : 0;
+      let duration = this.positionedOnce ? 500 : 0;
 
       anime({
         targets: this.$refs.animateEl.$el,
         translateX: this.offsetLeft,
         translateY: this.offsetTop,
-        duration
+        easing: 'easeInOutSine',
+        duration,
       });
 
       this.$refs.animateEl.$el.style.visibility = 'visible';

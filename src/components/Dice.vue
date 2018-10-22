@@ -19,6 +19,15 @@
 <script>
 import CANNON from 'cannon';
 import { debounce } from 'lodash';
+import { Howl, Howler } from 'howler';
+
+var dieCollisionSound = new Howl({
+  src: ['/static/sounds/cursor_click_11.mp3'],
+});
+
+var throwDiceSound = new Howl({
+  src: ['/static/sounds/move_cursor_11.mp3'],
+});
 
 export default {
   data() {
@@ -52,6 +61,8 @@ export default {
     this.inverseBodyOrientation = new CANNON.Quaternion();
     this.limit = Math.sin(Math.PI/4);
 
+    throwDiceSound.play();
+
     let step = () => {
       this.world.step(1/180);
       this.updateDice();
@@ -82,10 +93,11 @@ export default {
 
       let setSleeping = debounce(() => {
         this.sleeping = true;
+        this.$emit('doneRolling', this.total);
       }, 1000);
 
       if (diceBodies.reduce((sum, dieBody) => sum + dieBody.velocity.x + dieBody.velocity.z, 0) < .0001) {
-        // setSleeping();
+        setSleeping();
       };
     },
 
@@ -139,24 +151,31 @@ function createWorld() {
   let numDice = 4;
   let world = new CANNON.World();
   world.broadphase = new CANNON.NaiveBroadphase();
-  world.gravity.set(0,-30,0);
+  world.gravity.set(0,-50,0);
   world.solver.tolerance = 0.001;
   // Ground plane
   let plane = new CANNON.Plane();
   let groundBody = new CANNON.Body({ mass: 0 });
   groundBody.addShape(plane);
   groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+
+  groundBody.addEventListener("collide", e => {
+    dieCollisionSound.play();
+  });
+
   world.addBody(groundBody);
   // Create N cubes
   let shape = new CANNON.Box(new CANNON.Vec3(.41, .41, .41));
   for(let i = 0; i !== numDice; i++) {
-      let body = new CANNON.Body({ mass: 1 });
+      let body = new CANNON.Body({ mass: 0.00001 });
       body.addShape(shape);
       body.position.set(i * 1.5 - 2, 8, -10);
-      body.velocity.z = 10;
-      body.angularVelocity.x = Math.random() * 20 - 10;
-      body.angularVelocity.y = Math.random() * 20 - 10;
-      body.angularVelocity.z = Math.random() * 20 - 10;
+      // body.position.set(i * 1.5 - 2, 4, 0);
+      body.velocity.z = 15;
+      body.angularVelocity.x = Math.random() * 5 - 10;
+      body.angularVelocity.y = Math.random() * 5 - 10;
+      body.angularVelocity.z = Math.random() * 5 - 10;
+      body.quaternion.set(..._.times(4, () => Math.random() * 2 - 1));
       world.addBody(body);
   }
 
@@ -167,6 +186,15 @@ function createWorld() {
 
 <style scoped lang='scss'>
 @import '../styles/variables';
+
+#dice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+}
 
 .face.selected {
   background-color: $color-blue;
@@ -188,6 +216,7 @@ function createWorld() {
 .face {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 1);
   background-color: $color-dark-blue;
+  transition: background-color .2s ease;
 }
 .scene, .shape, .face, .face-wrapper, .cr {
   position: absolute;
