@@ -1,6 +1,5 @@
 <template>
   <div id="dice">
-    {{total}}
     <div id="tridiv">
       <div class="scene" v-for="die in dice">
         <div class="shape cuboid-1 cub-1"  :style="`transform: translateX(${die.translate.x * 100}px) translateY(${die.translate.y * 100}px) translateZ(${die.translate.z * 100}px) rotateY(${die.rotate.y}rad) rotateZ(${die.rotate.z}rad) rotateX(${die.rotate.x}rad)`">
@@ -13,6 +12,11 @@
         </div>
       </div>
     </div>
+    <transition v-on:enter="enterTotal">
+      <div v-if="sleeping" class="total">
+        {{total}}
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -20,6 +24,7 @@
 import CANNON from 'cannon';
 import { debounce } from 'lodash';
 import { Howl, Howler } from 'howler';
+import anime from 'animejs'
 
 var dieCollisionSound = new Howl({
   src: ['/static/sounds/cursor_click_11.mp3'],
@@ -67,7 +72,7 @@ export default {
       this.world.step(1/180);
       this.updateDice();
       if (!(this.destroyed || this.sleeping))
-        setTimeout(() => step(), 0);
+        setTimeout(() => step());
     };
 
     step();
@@ -78,6 +83,16 @@ export default {
   },
 
   methods: {
+    enterTotal(el, done) {
+      anime({
+        targets: [el],
+        translateY: [300, 0],
+        opacity: [0, 1],
+        easing: "easeOutSine",
+        duration: 200,
+      });
+    },
+
     updateDice() {
       let diceBodies = this.world.bodies.slice(1);
       this.dice = diceBodies.map(dieBody => {
@@ -93,7 +108,9 @@ export default {
 
       let setSleeping = debounce(() => {
         this.sleeping = true;
-        this.$emit('doneRolling', this.total);
+        setTimeout(() => {
+          this.$emit('doneRolling', this.total);
+        }, 1000);
       }, 1000);
 
       if (diceBodies.reduce((sum, dieBody) => sum + dieBody.velocity.x + dieBody.velocity.z, 0) < .0001) {
@@ -186,6 +203,19 @@ function createWorld() {
 
 <style scoped lang='scss'>
 @import '../styles/variables';
+
+.total {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  font-size: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 0 0 100px $color-blue, 10px 10px 0px $color-blue;
+}
 
 #dice {
   position: fixed;
