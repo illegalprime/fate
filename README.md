@@ -19,3 +19,20 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+## Docker Setup
+
+Run
+
+```
+sudo docker-compose -f docker-compose-dev.yml up
+```
+
+to get the development build up & running.
+
+For those running this for the first time make sure to create
+the CouchDB databases with (once the couchdb instance has started):
+
+```
+./create_dbs.sh
+```
